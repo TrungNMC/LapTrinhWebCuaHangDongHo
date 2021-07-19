@@ -1,0 +1,255 @@
+﻿@model List<Model.ViewModel.StatisticalModel>
+@{
+    ViewBag.Title = "Thống kê";
+    Layout = "~/Areas/Admin/Views/Shared/_Layouts.cshtml";
+    var listSta = (List<Model.ViewModel.StatisticalModel>)ViewBag.listSta;
+}
+
+
+@section jsFooter{
+
+    <script type="text/javascript">
+        var ngaydb = "";
+        var ngayKT = "";
+        $(document).ready(function () {
+            $('#frm2').slideDown();
+            $('#frmbieudo2').hide();
+
+            $('#dataTable').DataTable({
+                dom: 'Bfrtip',
+                buttons: [
+                    'copyHtml5',
+                    'excelHtml5',
+                    'csvHtml5',
+                    'pdfHtml5'
+                ]
+            });
+            
+            $('#btntimkiem').click(function () {
+                ngaydb = $("#txtnbd").val();
+                ngayKT = $("#txtnkt").val();
+                alert(ngaydb + "/" + ngayKT);
+                if (ngaydb.length > 0 && ngayKT.length > 0) {
+                    google.charts.load('current', { 'packages': ['corechart'] });
+                    google.charts.setOnLoadCallback(drawChart);
+                   
+                    $('#frm2').hide();
+                    $('#frmbieudo2').slideDown();
+
+                }
+            });
+            $('#btnthongke').click(function () {
+                $('#frm2').hide();
+                $('#frmbieudo2').hide();
+            });
+            $('#btnbieudo').click(function () {
+
+                google.charts.load('current', { 'packages': ['corechart', 'bar'] });
+                google.charts.setOnLoadCallback(drawStuff);
+                $('#frm2').slideDown();
+                $('#frmbieudo2').hide();
+            });
+            function drawChart() {
+                $.ajax({
+                    url: "/Admin/Statistical/ThongkeTheonngay",
+                    type: "post",
+                    data: { ngaybd: ngaydb, ngayKT: ngayKT },
+                    success: function (data1) {
+
+                        var data = new google.visualization.DataTable();
+                        data.addColumn('string', 'Thời gian');
+                        data.addColumn('number', 'Doanh thu');
+                        data.addColumn('number', 'Lợi nhuận');
+                        console.log(data1.arr);
+                        $('#txtbody').empty();
+                        $.each(data1.arr, function (k, v) {
+
+                            data.addRows([[v.Thang, v.doanh, v.loi]]);
+                            var let = `<tr id="">
+                                            <td>`+ v.Thang + `</td>
+                                            <td>`+ v.revenue + `</td>
+                                            <td>`+ v.benefit + `</td>
+                                        </tr>`;
+
+                            $('#txtbody').append(let)
+                        });
+
+                        var options = {
+                            title: 'Biểu đồ thống kê từ ngày ' + ngaydb + " đến " + ngayKT,
+                            curveType: 'function',
+                            legend: { position: 'bottom' },
+                            
+
+                        };
+
+                        var chart = new google.visualization.LineChart(document.getElementById('curve_chart'));
+
+                        chart.draw(data, options);
+                        //  drawStuff();
+
+                    }
+                })
+
+            }
+            google.charts.load('current', { 'packages': ['corechart', 'bar'] });
+            google.charts.setOnLoadCallback(drawStuff);
+
+            function drawStuff() {
+                $.ajax({
+                    url: "/Admin/Statistical/ThongkeTheoThang",
+                    type: "post",
+                    success: function (data1) {
+
+                        var chartDiv = document.getElementById('chart_div');
+
+                        var data = google.visualization.arrayToDataTable([
+                            ['Tháng', 'Doanh Thu', 'Lơi Nhuận'],
+                            [data1.arr[0].Thang, data1.arr[0].doanh, data1.arr[0].loi],
+
+                        ]);
+                        $('#txtbody').empty();
+                        $.each(data1.arr, function (k, v) {
+                            if (k > 0) {
+                                data.addRows([[v.Thang, v.doanh, v.loi]]);
+                            }
+                            var let = `<tr id="">
+                                            <td>`+ v.Thang + `</td>
+                                            <td>`+ v.revenue + `</td>
+                                            <td>`+ v.benefit + `</td>
+                                        </tr>`;
+
+                            $('#txtbody').append(let)
+
+                        });
+                        // data.addRows([["222222", 11, 222]]);
+
+
+                        var materialOptions = {
+                            width: 1100,
+                            chart: {
+                                title: 'Biểu đồ thống kê theo tháng',
+
+                            },
+                            series: {
+                                0: { axis: 'Doanh thu' }, // Bind series 0 to an axis named 'distance'.
+                                1: { axis: 'Loi Nhuận' } // Bind series 1 to an axis named 'brightness'.
+                            },
+                            axes: {
+                                y: {
+                                    distance: { label: 'parsecs' }, // Left y-axis.
+                                    brightness: { side: 'right', label: 'apparent magnitude' } // Right y-axis.
+                                }
+                            }
+                        };
+
+                        var classicOptions = {
+                            width: 1100,
+                            series: {
+                                0: { targetAxisIndex: 0 },
+                                1: { targetAxisIndex: 1 }
+                            },
+                            title: 'Biểu đồ thống kê theo tháng',
+                            vAxes: {
+                                // Adds titles to each axis.
+                                0: { title: 'parsecs' },
+                                1: { title: 'apparent magnitude' }
+                            }
+                        };
+
+                        function drawMaterialChart() {
+                            var materialChart = new google.charts.Bar(chartDiv);
+                            materialChart.draw(data, google.charts.Bar.convertOptions(materialOptions));
+                            button.innerText = 'Change to Classic';
+                            button.onclick = drawClassicChart;
+                        }
+
+                        function drawClassicChart() {
+                            var classicChart = new google.visualization.ColumnChart(chartDiv);
+                            classicChart.draw(data, classicOptions);
+                            button.innerText = 'Change to Material';
+                            button.onclick = drawMaterialChart;
+                        }
+
+                        drawMaterialChart();
+
+                    }
+                });
+            }
+
+        });
+
+        
+    </script>
+}
+
+<div class="row">
+   
+  
+    <div class="col-lg-12">
+
+        <div class="card shadow mb-4">
+            <div class="card-body">
+                <div class="row">
+                    <div class="col">
+                        <input type="date" id="txtnbd" class="form-control" />
+                    </div>
+                    <div class="col">
+                        <input type="date" id="txtnkt" class="form-control" />
+                    </div>
+                    <div class="col-lg-6">
+                        <button class="btn btn-primary btn-sm" id="btntimkiem"> tim kiem</button>
+                        <button class="btn btn-primary btn-sm" id="btnthongke"> Xem bảng thông kê</button>
+                        <button class="btn btn-primary btn-sm" id="btnbieudo" >Xem biểu đồ</button>
+                      
+                    </div>
+                </div>
+                <br />
+                
+                <div id="frm2">
+                    <div id="chart_div" style=" margin-left:8%; width:1100px; height: 500px;"></div>
+                </div>
+                
+                <div class="row" id="frmbieudo2">
+                    <!-- Area Chart -->
+    
+                                <div class="chart-area col-12">
+                                    <div id="curve_chart" style="width: 1100px; height: 500px"></div>
+                  
+                    </div>
+                </div>
+
+                <div id="frmthongke">
+                    <div class="table-responsive">
+
+                        <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                            <thead>
+                                <tr>
+                                    <th>Thời gian</th>
+                                    <th>Doanh thu</th>
+                                    <th>Lợi nhuận</th>
+                                </tr>
+                            </thead>
+                            <tbody id="txtbody">
+                                @foreach (var item in listSta.OrderBy(x => x.date))
+                                {
+                                    if (@item.status == 1)
+                                    {
+                                        <tr id="row_@item.date">
+                                            <td>@item.date.Value.Month - @item.date.Value.Year</td>
+                                            <td>@item.revenue.GetValueOrDefault(0).ToString("N0") </td>
+                                            <td>@item.benefit.GetValueOrDefault(0).ToString("N0")</td>
+                                        </tr>
+                                    }
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+

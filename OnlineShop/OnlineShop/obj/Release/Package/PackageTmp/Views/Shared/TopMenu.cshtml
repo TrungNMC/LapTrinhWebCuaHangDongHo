@@ -1,0 +1,32 @@
+﻿@model List<Model.EF.Menu>
+
+<div id="top-header">
+    <div class="container">
+        @{ var session = (UserLogin)Session[OnlineShop.Common.CommonConstants.USER_SESSION]; }
+        <ul class="header-links pull-left">
+            <li><a href="#"><i class="fa fa-phone"></i> +0387-53-11-53</a></li>
+            <li><a href="#"><i class="fa fa-envelope-o"></i> OnlineShop@st.utc2.edu.vn</a></li>
+            <li><a href="#"><i class="fa fa-map-marker"></i> 72/4/6 Tăng Nhơn Phú A</a></li>
+        </ul>
+        @if (session == null)
+        {
+    <ul class="header-links pull-right">
+
+        <li><a onclick="Open()">Đăng nhập</a></li>
+                
+        <li><a href="/dang-ki">Đăng ký</a></li>
+    </ul>
+        }
+        else
+        {
+
+    <ul class="header-links pull-right">
+        <li><a>Xin chào: @session.Name</a></li>
+        <li><a>@Html.ActionLink("Đăng xuất", "Logout", "User")</a></li>
+        <li><a href="/Lichsu/1">Theo dõi đơn hàng</a></li>
+       
+    </ul>
+        }
+    </div>
+    <div class="clear"></div>
+</div>

@@ -1,0 +1,49 @@
+<configuration>
+	<configSections>
+        <!--
+            BotDetect configuration:
+
+            If your project is not going to be using the Simple API,
+            the "Simple API: ..." configuration lines bellow can be safely removed.
+
+            If your project is not going to be using the Traditional API,
+            the "Traditional API: ..." configuration lines bellow can be safely removed.
+        -->
+
+		<!-- Traditional API: Register the BotDetect's Configuration section -->
+		<section name="botDetect" requirePermission="false" type="BotDetect.Configuration.BotDetectConfigurationSection, BotDetect"/>
+	</configSections>
+	<system.web>
+		<httpHandlers>
+			<!-- Simple API: Register the HttpHandler used for BotDetect requests -->
+			<add verb="GET" path="simple-captcha-endpoint.ashx" type="BotDetect.Web.SimpleCaptchaHandler, BotDetect"/>
+			<!-- Traditional API: Register the HttpHandler used for BotDetect requests -->
+			<add verb="GET" path="BotDetectCaptcha.ashx" type="BotDetect.Web.CaptchaHandler, BotDetect"/>
+		</httpHandlers>
+
+		<!-- Traditional API: Register a custom SessionIDManager for BotDetect requests -->
+		<sessionState mode="InProc" cookieless="AutoDetect" timeout="20" sessionIDManagerType="BotDetect.Web.CustomSessionIdManager, BotDetect"/>
+
+		<!-- Traditional API: Ensuring Session State is enabled -->
+		<pages enableSessionState="true"/>
+
+		<pages>
+			<controls>
+				<add assembly="BotDetect" namespace="BotDetect.Web.UI" tagPrefix="BotDetect"/>
+			</controls>
+		</pages>
+	 </system.web>
+	<system.webServer>
+		<validation validateIntegratedModeConfiguration="false"/>
+		<handlers>
+			<!-- Simple API: Register the HttpHandler used for BotDetect requests (IIS 7.0+) -->
+			<remove name="SimpleCaptchaEndpoint"/>
+			<add name="SimpleCaptchaEndpoint" preCondition="integratedMode" verb="GET" path="simple-captcha-endpoint.ashx" type="BotDetect.Web.SimpleCaptchaHandler, BotDetect"/>
+
+			<!-- Traditional API: Register the HttpHandler used for BotDetect requests (IIS 7.0+) -->
+			<remove name="BotDetectCaptchaHandler"/>
+			<add name="BotDetectCaptchaHandler" preCondition="integratedMode" verb="GET" path="BotDetectCaptcha.ashx" type="BotDetect.Web.CaptchaHandler, BotDetect"/>
+		</handlers>
+	</system.webServer>
+
+</configuration>

@@ -1,0 +1,220 @@
+﻿
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var slides = (List<Model.EF.Slide>)ViewBag.Slides;
+    var listnewProducts = (List<Model.EF.Product>)ViewBag.ListNewProducts;
+    var listFeatureProducts = (List<Model.EF.Product>)ViewBag.ListFeatureProducts;
+}
+<!-- SECTION -->
+<div class="section">
+    <!-- container -->
+    <div class="container">
+        <!-- row -->
+        <div class="row">
+            <!-- shop -->
+            <div class="col-md-4 col-xs-4">
+                @{ Html.RenderAction("ProductCategory", "Product");}
+            </div>
+            <!-- /shop -->
+            <!-- shop -->
+            <div class="col-md-8 col-xs-4">
+                <!-- Slider Bar Starst -->
+                <div class="slider container1">
+                    <div class="slides">
+                        <input type="radio" name="radio-btn" id="radio1">
+                        <input type="radio" name="radio-btn" id="radio2">
+                        <input type="radio" name="radio-btn" id="radio3">
+                        <input type="radio" name="radio-btn" id="radio4">
+                        @{ var count = true; }
+
+                        @foreach (var item in slides)
+                        {
+                            if (count)
+                            {
+                                <div class="slide first">
+                                    <img src="@item.Image" alt="">
+                                </div>
+                            }
+                            else
+                            {
+                                <div class="slide">
+                                    <img src="@item.Image" alt="">
+                                </div>
+                            }
+                            count = false;
+                        }
+                        <div class="navigation-auto">
+                            <div class="auto-btn1"></div>
+                            <div class="auto-btn2"></div>
+                            <div class="auto-btn3"></div>
+                            <div class="auto-btn4"></div>
+                        </div>
+                    </div>
+                    <div class="navigation-manual">
+                        <label for="radio1" class="manual-btn"></label>
+                        <label for="radio2" class="manual-btn"></label>
+                        <label for="radio3" class="manual-btn"></label>
+                        <label for="radio4" class="manual-btn"></label>
+                    </div>
+                </div>
+                <script type="text/javascript">
+                    var counter = 1;
+                    setInterval(function () {
+                        document.getElementById('radio' + counter).checked = true;
+                        counter++;
+                        if (counter > 4) {
+                            counter = 1;
+                        }
+                    }, 5000);</script>
+                <!-- Slider Bar End -->
+            </div>
+            <!-- /shop -->
+        </div>
+        <!-- /row -->
+    </div>
+    <!-- /container -->
+</div>
+<!-- /SECTION -->
+<!-- SECTION -->
+<div class="section">
+    <!-- container -->
+    <div class="container">
+        <!-- row -->
+        <div class="row">
+
+            <!-- section title -->
+            <div class="col-md-12">
+                <div class="section-title">
+                    <h3 class="title"><a href="/san-pham">Sản phẩm mới</a></h3>
+                </div>
+            </div>
+            <!-- /section title -->
+            <!-- Products tab & slick -->
+            <div class="col-md-12">
+                <div class="row">
+                    <div class="products-tabs">
+                        <!-- tab -->
+                        <div id="tab1" class="tab-pane active">
+                            <div class="products-slick" data-nav="#slick-nav-1">
+                                <!-- product -->
+                                @foreach (var item in listnewProducts)
+                                {
+                                    var url = "/chi-tiet/" + item.MetaTitle + "-" + item.ID;
+                                    <div class="product">
+                                        <div class="product-img">
+                                            <a href="@url"><img src="@item.Image" height="280" class="w-100" alt="@item.Name"></a>
+                                        </div>
+                                        <div class="product-body" style="height:150px">
+                                            <h3 class="product-name"><a href="#">@item.Name</a></h3>
+                                            @if (item.PromotionPrice != null)
+                                            {
+                                                <h4 class="product-price" style="text-decoration:line-through">@(item.Price.HasValue?item.Price.Value.ToString("N0"):"Liên hệ")</h4>
+                                                <h4 class="product-price">@(item.PromotionPrice.HasValue?item.PromotionPrice.Value.ToString("N0"):"Liên hệ")</h4>
+                                            }
+                                            else
+                                            {
+                                                <h4 class="product-price">@(item.Price.HasValue?item.Price.Value.ToString("N0"):"Liên hệ")</h4>
+                                            }
+                                            <h4>@(item.Status? "Còn hàng":"Hết hàng")</h4>
+                                            <div class="product-rating">
+                                                <i class="fa fa-star"></i>
+                                                <i class="fa fa-star"></i>
+                                                <i class="fa fa-star"></i>
+                                                <i class="fa fa-star"></i>
+                                                <i class="fa fa-star"></i>
+                                            </div>
+                                        </div>
+                                        <div class="add-to-cart">
+                                            <h4 class="add-to-cart-btn"><i class="fa fa-shopping-cart"></i><a href="/them-gio-hang?productId=@item.ID&quantity=1">Thêm vào giỏ hàng</a></h4>
+                                        </div>
+                                    </div>
+                                }
+                                <!-- /product -->
+                            </div>
+                            <div id="slick-nav-1" class="products-slick-nav"></div>
+                        </div>
+                        <!-- /tab -->
+                    </div>
+                </div>
+            </div>
+            <!-- Products tab & slick -->
+        </div>
+        <!-- /row -->
+    </div>
+    <!-- /container -->
+</div>
+<!-- /SECTION -->
+<div class="section">
+    <!-- container -->
+    <div class="container">
+        <!-- row -->
+        <div class="row">
+
+            <!-- section title -->
+            <div class="col-md-12">
+                <div class="section-title">
+                    <h3 class="title"><a href="/san-pham">Sản phẩm nổi bật</a></h3>
+                </div>
+            </div>
+            <!-- /section title -->
+            <!-- Products tab & slick -->
+            <div class="col-md-12">
+                <div class="row">
+                    <div class="products-tabs">
+                        <!-- tab -->
+                        <div id="tab1" class="tab-pane active">
+                            <div class="products-slick" data-nav="#slick-nav-1">
+                                <!-- product -->
+                                @foreach (var item in listFeatureProducts)
+                                {
+                                    var url = "/chi-tiet/" + item.MetaTitle + "-" + item.ID;
+                                    <div class="product">
+                                        <div class="product-img">
+                                            <a href="@url"><img src="@item.Image" height="280" class="w-100" alt="@item.Name"></a>
+                                        </div>
+                                        <div class="product-body" style="height:150px">
+                                            <h3 class="product-name"><a href="#">@item.Name</a></h3>
+                                            @if (item.PromotionPrice != null)
+                                            {
+                                                <h4 class="product-price" style="text-decoration:line-through">@(item.Price.HasValue?item.Price.Value.ToString("N0"):"Liên hệ")</h4>
+                                                <h4 class="product-price">@(item.PromotionPrice.HasValue?item.PromotionPrice.Value.ToString("N0"):"Liên hệ")</h4>
+                                            }
+                                            else
+                                            {
+                                                <h4 class="product-price">@(item.Price.HasValue?item.Price.Value.ToString("N0"):"Liên hệ")</h4>
+                                            }
+                                            <h4>@(item.Status? "Còn hàng":"Hết hàng")</h4>
+                                            <div class="product-rating">
+                                                <i class="fa fa-star"></i>
+                                                <i class="fa fa-star"></i>
+                                                <i class="fa fa-star"></i>
+                                                <i class="fa fa-star"></i>
+                                                <i class="fa fa-star"></i>
+                                            </div>
+                                        </div>
+                                        <div class="add-to-cart">
+                                            <h4 class="add-to-cart-btn"><i class="fa fa-shopping-cart"></i><a href="/them-gio-hang?productId=@item.ID&quantity=1">Thêm vào giỏ hàng</a></h4>
+                                        </div>
+                                    </div>
+                                }
+                                <!-- /product -->
+                            </div>
+                            <div id="slick-nav-1" class="products-slick-nav"></div>
+                        </div>
+                        <!-- /tab -->
+                    </div>
+                </div>
+            </div>
+            <!-- Products tab & slick -->
+        </div>
+        <!-- /row -->
+    </div>
+    <!-- /container -->
+</div>
+<!-- /SECTION -->
+<!-- Messenger Plugin chat Code -->
+<div id="fb-root"></div>
+
+<!-- Your Plugin chat code -->
+<div id="fb-customer-chat" class="fb-customerchat">
+</div>

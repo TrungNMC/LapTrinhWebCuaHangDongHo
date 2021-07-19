@@ -1,0 +1,186 @@
+﻿@model PagedList.IPagedList<Model.EF.ProductCategory>
+@using PagedList.Mvc;
+@using OnlineShop.Common
+@using OnlineShop.Models;
+@{
+    ViewBag.Title = "Quản lí danh mục sản phẩm";
+    Layout = "~/Areas/Admin/Views/Shared/_Layouts.cshtml";
+}
+
+@section jsFooter{
+    <script>
+        $(document).ready(function () {
+            //
+            var id = "";
+            $(document).on('click', "a[name = 'Update']", function () {
+                let id = $(this).closest('tr').attr('id');
+                let ten = $(this).closest('tr').find("td:eq(0)").text();
+
+                let title = $(this).closest('tr').find("td:eq(1)").text();
+                $('#txtten').val(ten);
+                $("#txttile").val(title);
+
+                $('#modalSP').show();
+
+            })
+            $('#btnnhan').click(function () {
+                $('#modalSP').show();
+                id = "";
+
+            });
+            $('#btnSubmit').click(function () {
+                var ten = $('#txtten').val();
+                var title = $("#txttile").val();
+                $('#err1').text("");
+                $('#err2').text("")
+                if (ten.length == 0) {
+                    $('#err1').text("Mời nhập thông tin phần này")
+                } else if (title.length == 0) {
+                    $('#err2').text("Mời nhập thông tin phần này")
+                }
+                if (ten.length > 0 && title.length > 0) {
+                    if (id.length == 0) {
+                        $.ajax({
+                            url: "/Admin/ProductCategory/Create",
+                            data: { ten: ten, title: title },
+                            type: "post",
+                            success: function (data) {
+                                if (data.code == 100) {
+                                    alert("Thêm mới thành công")
+                                    window.location = "/Admin/ProductCategory/Index"
+                                }
+                                else {
+                                    alert("Xảy ra lỗi");
+                                }
+                            }
+                        });
+                    } else {
+                        $.ajax({
+                            url: "/Admin/ProductCategory/Edit",
+                            data: { ma: id, ten: ten, title: title },
+                            type: "post",
+                            success: function (data) {
+                                if (data.code == 100) {
+                                    alert("Cập nhật thành công")
+                                    window.location = "/Admin/ProductCategory/Index"
+                                }
+                                else {
+                                    alert("Xảy ra lỗi");
+                                }
+                            }
+                        });
+                    }
+
+                }
+
+            });
+        });
+    </script>
+    <script src="/Assets/admin/js/controller/productcategoryController.js"></script>
+}
+<div class="modal" tabindex="-1" role="dialog" id="modalSP">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">THÔNG TIN LOẠI SẢN PHẨM</h5>
+            </div>
+            <div class="modal-body">
+                <input type="text" hidden id="idLop" value="" />
+
+                <div class="form-group">
+                    <label for="exampleFormControlInput1">Tên</label>
+                    <input type="text" class="form-control" id="txtten" placeholder="Tên lọai">
+                    <p id="err1" style="color:orangered"></p>
+                    <label for="exampleFormControlInput1">Title</label>
+                    <input class="form-control" placeholder="Tên Title" id="txttile"></input>
+                    <p id="err2" style="color:orangered"></p>
+                </div>
+
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" id="btnSubmit">Xác nhận</button>
+                <button type="button" class="btn btn-danger" data-dismiss="modal" id="btnDong">Đóng</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-lg-12">
+        <div class="card shadow mb-4">
+            <div class="card-header py-3">
+                <h6 class="m-0 font-weight-bold text-primary">Danh sách loại sản phẩm</h6>
+            </div>
+            <div class="card-header">
+                <div class="d-flex align-items-center">
+                    <div class="ml-auto col-sm-4">
+                        @using (Html.BeginForm("Index", "ProductCategory", FormMethod.Get))
+                        {
+                            <div class="row ">
+                                <div class="col-sm-8">
+                                    <input type="text" class="form-control" value="@ViewBag.SearchString" name="searchString" />
+                                </div>
+
+                                <button type="submit" class="btn btn-success btn-round">Tìm kiếm</button>
+
+                            </div>
+
+                        }
+
+
+                    </div>
+                    @{ var session = (UserLogin)Session[CommonConstants.ADMIN_SESSION];
+
+
+
+                        if (session.GroupID.Contains("ADMIN"))
+                        {
+                            <button id="btnnhan" class="btn btn-primary btn-round" href="/Admin/ProductCategory/Create">Thêm mới</button>
+                            } }
+                        </div>
+            </div>
+            <div class="card-body">
+
+                <div class="table-responsive">
+                    <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                        <thead>
+                            <tr>
+                                <th>Tên danh mục</th>
+                                <th>Title</th>
+                               
+
+                                    @if (session.GroupID.Contains("ADMIN"))
+                                    {
+                                        <th>#</th>}
+                                    </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model)
+                            {
+                            <tr id="row_@item.ID">
+                                <td>@item.Name</td>
+                                <td>@item.MetaTitle</td>
+                            
+
+                                   @if (session.GroupID.Contains("ADMIN"))
+                                   {
+                                        <td>
+                                            <a name="Update" href="#">Sửa</a>
+                                            |
+                                            @Ajax.ActionLink("Xóa", "Delete", new { @id = item.ID }, new AjaxOptions
+                                       {
+                                           Confirm = "Bạn có muốn xóa bản ghi này?",
+                                           OnComplete = "$('#row_" + @item.ID + "').remove()",
+                                           HttpMethod = "Delete"
+                                       })
+                                        </td>}
+                                    </tr>
+                            }
+                        </tbody>
+                    </table>
+                    @Html.PagedListPager(Model, page => Url.Action("Index", new { page, @searchString = @ViewBag.SearchString }))
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

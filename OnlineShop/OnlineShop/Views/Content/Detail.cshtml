@@ -1,0 +1,27 @@
+﻿@model Model.EF.Content
+@{
+    ViewBag.Title = "Detail";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="content">
+    <div class="content_top">
+        <div class="heading">
+            <h2><span>Tên bài viết: </span>@Model.Name</h2>
+        </div>
+        <div class="clear"></div>
+    </div>
+    <div class="section-group">
+        <span>Chi tiết: @Html.Raw(Model.Detail)</span>
+        <ul>
+            @{
+                var tags = (List<Model.EF.Tag>)ViewBag.Tags;
+                foreach (var tag in tags)
+                {
+                    <li><h4><a href="/tag/@tag.ID"><span>Bài viết liên quan: </span>@tag.Name</a></h4></li>
+                }
+            }
+        </ul>
+    </div>
+</div>
+

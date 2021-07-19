@@ -1,0 +1,114 @@
+﻿@model IEnumerable<Model.EF.Order>
+@using Model.EF;
+@{
+    ViewBag.Title = "Lichsu";
+    Layout = "~/Views/Shared/Layoutdonhang.cshtml";
+}
+<div class="modal" tabindex="-1" role="dialog" id="modalSP">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title text-center">CHON LÝ DO HỦY</h5>
+            </div>
+            <div class="modal-body">
+
+                <div class="form-check">
+                    <label class="form-check-label">
+                        <input class="form-check-input" type="checkbox" value="Tôi đặt nhầm món hàng">
+                        <span class="form-check-sign">Tôi đặt nhầm món hàng</span>
+                    </label>
+                </div>
+                <div class="form-check">
+                    <label class="form-check-label">
+                        <input class="form-check-input" type="checkbox" value="Tôi muốn thay đổi só lượng">
+                        <span class="form-check-sign">Tôi muốn thay đổi só lượng</span>
+                    </label>
+                </div>
+                <div class="form-check">
+                    <label class="form-check-label">
+                        <input class="form-check-input" type="checkbox" value="Tôi muốn đổi đỉa chỉ đơn hàng">
+                        <span class="form-check-sign"> Tôi muốn đổi đỉa chỉ đơn hàng </span>
+                    </label>
+                </div>
+                <div class="form-check">
+                    <label class="form-check-label">
+                        <input class="form-check-input" type="checkbox" value="Đổi ý không mua nữa">
+                        <span class="form-check-sign">Đổi ý không mua nữa</span>
+                    </label>
+                </div>
+                <div class="form-check">
+                    <label class="form-check-label">
+                        <input class="form-check-input" type="checkbox" value="Tìm thấy giá rẻ hơn ở chỗ khác">
+                        <span class="form-check-sign">Tìm thấy giá rẻ hơn ở chỗ khác</span>
+                    </label>
+                </div>
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary btn-sm" id="btnSubmit">Xác nhận</button>
+                <button type="button" class="btn btn-danger btn-sm" id="btnDong">Đóng</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div id="breadcrumb" class="section">
+    <div class="container">
+        <!-- row -->
+        <div class="row">
+            @if (Model.OrderByDescending(x => x.CreatedDate).ToList().Count > 0)
+            {
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <td>Mã đơn hàng</td>
+                            <td>Ngày đặt</td>
+                            <td>Đỉa chỉ giao hàng </td>
+                            <td>Số lượng sản phẩm</td>
+
+                            <td>Thành tiền</td>
+                            @if (Model.OrderByDescending(x => x.CreatedDate).ToList()[0].Status == 0)
+                            {
+                                <td></td>
+                            }
+
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model.OrderByDescending(x => x.CreatedDate).ToList())
+                        {
+                            <tr>
+                                <td>@item.ID</td>
+                                <td>@item.CreatedDate</td>
+                                <td>@item.ShipAddress</td>
+                                <td>@(new OnlineShopDbContext().OrderDetails.Where(x=>x.OrderID==item.ID).Sum(x=>x.Quantity)) </td>
+                                <td>@(new OnlineShopDbContext().OrderDetails.Where(x=>x.OrderID==item.ID).Sum(x=>x.Price).GetValueOrDefault(0).ToString("N0"))</td>
+                                @if (item.Status == 0)
+                                {
+                                    <td><a name="btnSua" class="btndelete">Xóa</a></td>
+                                }
+
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+
+            }
+            else
+
+            { <div class="text-center">
+                    <i class="bi bi-cart-x" style="font-size: 20rem"></i>
+                    <br />
+                    <h4>Chưa có đơn hàng nào</h4>
+                </div>
+
+
+            }
+
+
+            <!-- /row -->
+        </div>
+        <!-- /container -->
+    </div>
+</div>

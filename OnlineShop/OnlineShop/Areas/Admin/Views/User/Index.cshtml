@@ -1,0 +1,94 @@
+﻿@using OnlineShop.Common
+@using OnlineShop.Models;
+@{
+    // ViewBag.Title = "Index";
+    Layout = "~/Areas/Admin/Views/Shared/_Layouts.cshtml";
+
+}
+
+@model PagedList.IPagedList<Model.EF.Ad>
+@using PagedList.Mvc;
+@section jsFooter{
+    <script src="/Assets/admin/js/controller/userController.js"></script>
+}
+<div class="row">
+    <div class="col-lg-12">
+        <div class="card shadow mb-4">
+            <div class="card-header py-3">
+                <h6 class="m-0 font-weight-bold text-primary">Danh sách người dùng</h6>
+            </div>
+            <div class="card-header">
+                @{ var session = (UserLogin)Session[CommonConstants.ADMIN_SESSION];
+
+
+
+                    if (session.GroupID.Contains("ADMIN"))
+                    {
+            <div class="d-flex align-items-center">
+                <div class="ml-auto">
+                    @using (Html.BeginForm("Index", "User", FormMethod.Get))
+                    {
+            <div class="row g-3">
+                <div class="col-auto">
+                    <input type="text" class="form-control" value="@ViewBag.SearchString" name="searchString" />
+                </div>
+                <div class="col-auto">
+                    <button type="submit" class="btn btn-success btn-round ml-auto">Tìm kiếm</button>
+                    <a class="btn btn-primary btn-round ml-auto" href="/Admin/User/Create">Thêm mới</a>
+                </div>
+            </div>}
+                   
+                </div>
+            </div>}}
+                    </div>
+
+
+            <div class="card-body">
+
+                <div class="table-responsive">
+                    <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                        <thead>
+                            <tr>
+                                <th>Tài khoản</th>
+                                <th>Tên</th>
+                                <th>Email</th>
+                                @if (session.GroupID.Contains("ADMIN"))
+                                {
+                                    <th>Trạng thái</th>
+                                                    <th>#</th>
+                                                }
+                               
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model)
+                            {
+                            <tr id="row_@item.ID">
+
+                                <td>@item.UserName</td>
+                                <td>@item.Name</td>
+                                <td>@item.Email</td>
+                                @if (session.GroupID.Contains("ADMIN"))
+                                {
+                            <td><a href="#" class="btn-active" data-id="@item.ID">@(item.Status ? "Kích hoạt" : "Khóa")</a></td>
+                                                <td>
+                                                    <a href="/Admin/User/Edit/@item.ID">Sửa</a>
+                                                    |
+                                                    @Ajax.ActionLink("Xóa", "Delete", new { @id = item.ID }, new AjaxOptions
+                                                    {
+                                                        Confirm = "Bạn có muốn xóa bản ghi này?",
+                                                        OnComplete = "$('#row_" + @item.ID + "').remove()",
+                                                        HttpMethod = "Delete"
+                                                    })
+                                                </td>
+}
+
+                            </tr>}
+                        </tbody>
+                    </table>
+                    @Html.PagedListPager(Model, page => Url.Action("Index", new { page, @searchString = @ViewBag.SearchString }))
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

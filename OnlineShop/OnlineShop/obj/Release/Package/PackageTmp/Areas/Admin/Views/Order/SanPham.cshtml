@@ -1,0 +1,94 @@
+﻿@model List<Model.EF.Product>
+@using PagedList.Mvc;
+@{
+    ViewBag.Title = "Quản lí sản phẩm";
+    Layout = "~/Areas/Admin/Views/Shared/_Layouts.cshtml";
+}
+@using OnlineShop.Common
+@using OnlineShop.Models;
+
+@section jsFooter{
+    <script src="/Assets/admin/js/controller/productController.js"></script>
+}
+<div class="row">
+    <div class="col-lg-12">
+        <div class="card shadow mb-4">
+            <div class="card-header py-3">
+                <h6 class="m-0 font-weight-bold text-primary">Danh sách sản phẩm</h6>
+            </div>
+            <div class="card-header">
+                <div class="d-flex align-items-center">
+                    <div class="ml-auto col-md-6">
+                        @using (Html.BeginForm("Index", "Product", FormMethod.Get))
+                        {
+                            <div class="row mb-3">
+                                <div class="col-sm-7">
+                                    <input type="text" class="form-control" value="@ViewBag.SearchString" name="searchString" />
+                                </div>
+
+                                <button type="submit" class="btn btn-success btn-round">Tìm kiếm</button>
+                                @{ var session1 = (UserLogin)Session[CommonConstants.ADMIN_SESSION];
+
+
+
+                                    if (session1.GroupID.Contains("ADMIN"))
+                                    {
+                                        <a class="btn btn-primary btn-round" href="/Admin/Product/Create">Thêm mới</a>}
+                                }
+                            </div>
+
+                        }
+
+                    </div>
+
+
+                </div>
+
+
+                <div class="table-responsive">
+
+                    <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                        <thead>
+                            <tr>
+                                
+                            <tr>
+                                <th>Mã sản phẩm</th>
+                                <th>Tên sản phẩm</th>
+                                <th>Giá nhập</th>
+                                <th>Giá bán</th>
+                                <th>Hình ảnh</th>
+                             
+                                @{ var session = (UserLogin)Session[CommonConstants.ADMIN_SESSION];
+                                    if (session.GroupID.Contains("ADMIN"))
+                                    {
+                                        <th>#</th>}
+} 
+
+                            </tr>
+                            
+                        </thead>
+                        <tbody id="txtbody">
+                            @foreach (var item in Model)
+                            {
+                                <tr id="row_@item.ID">
+                                    <td>@item.ID</td>
+                                    <td>@item.Name</td>
+                                    <td>@(item.OriginalPrice.HasValue? item.OriginalPrice.Value.ToString("N0"):"Liên hệ")</td>
+                                    <td>@(item.Price.HasValue? item.Price.Value.ToString("N0"):"Liên hệ")</td>
+                                    <td><img src="@item.Image" width="80" /></td>
+                                  
+                                 
+                                        <td>
+                                            <a href="/Admin/Order/AddIteam/@item.ID">Chọn </a>
+                                          
+                                        </td>
+}
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,17 @@
+C:\Users\Admin\Desktop\Thuctapchuyenmon\Common\bin\Debug\Common.dll
+C:\Users\Admin\Desktop\Thuctapchuyenmon\Common\bin\Debug\Common.pdb
+C:\Users\Admin\Desktop\Thuctapchuyenmon\Common\obj\Debug\Common.csproj.CoreCompileInputs.cache
+C:\Users\Admin\Desktop\Thuctapchuyenmon\Common\obj\Debug\Common.dll
+C:\Users\Admin\Desktop\Thuctapchuyenmon\Common\obj\Debug\Common.pdb
+C:\Users\PhamTrongTruong\Desktop\LapTrinhWeb\Thuctapchuyenmon\Common\bin\Debug\Common.dll
+C:\Users\PhamTrongTruong\Desktop\LapTrinhWeb\Thuctapchuyenmon\Common\bin\Debug\Common.pdb
+C:\Users\PhamTrongTruong\Desktop\LapTrinhWeb\Thuctapchuyenmon\Common\obj\Debug\Common.csprojAssemblyReference.cache
+C:\Users\PhamTrongTruong\Desktop\LapTrinhWeb\Thuctapchuyenmon\Common\obj\Debug\Common.csproj.CoreCompileInputs.cache
+C:\Users\PhamTrongTruong\Desktop\LapTrinhWeb\Thuctapchuyenmon\Common\obj\Debug\Common.dll
+C:\Users\PhamTrongTruong\Desktop\LapTrinhWeb\Thuctapchuyenmon\Common\obj\Debug\Common.pdb
+C:\Users\DELL\Desktop\NhomLapTrinhWEB\OnlineShop\Common\bin\Debug\Common.dll
+C:\Users\DELL\Desktop\NhomLapTrinhWEB\OnlineShop\Common\bin\Debug\Common.pdb
+C:\Users\DELL\Desktop\NhomLapTrinhWEB\OnlineShop\Common\obj\Debug\Common.csprojAssemblyReference.cache
+C:\Users\DELL\Desktop\NhomLapTrinhWEB\OnlineShop\Common\obj\Debug\Common.csproj.CoreCompileInputs.cache
+C:\Users\DELL\Desktop\NhomLapTrinhWEB\OnlineShop\Common\obj\Debug\Common.dll
+C:\Users\DELL\Desktop\NhomLapTrinhWEB\OnlineShop\Common\obj\Debug\Common.pdb

@@ -1,0 +1,58 @@
+﻿
+@using OnlineShop.Models
+@{
+    ViewBag.Title = "Login";
+    //Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="text-center">
+    <div class="col-md-12" style="background-color:#ffffff">
+        <div class="content">
+
+            <div class="form-horizontal">
+                <br />
+                <div class="card-heade">
+                    <h3 class="d-flex align-items-center justify-content-center ">Đăng nhập</h3>
+                </div>
+                <br />
+                <div class="form-group text-left">
+                    <div class="col-md-12">
+                        Tên Đăng Nhập
+                        <input id="txtemail" class="form-control py-4" type="email" placeholder="Tên đăng nhâp" />
+                        <span id="messemail" class="text-danger"></span>
+                    </div>
+                </div>
+
+                <div class="form-group text-left">
+                    <div class="col-md-12">
+                        Mật Khẩu
+                        <input class="form-control" id="txtpass" type="password" placeholder="Mật khẩu" />
+                        <span id="messpasss" class="text-danger"></span>
+                    </div>
+
+                </div>
+                <span class="text-danger" id="txtmess"></span>
+
+                <button id="btnDangnhap" type="button" class="btn btn-info"> Đăng nhập </button>
+            </div>
+
+            or
+
+            @Html.Partial("_ExternalLoginsListPartial", new ExternalLoginListViewModel { })
+            @*<li><a href="#"><i class="display-flex-center zmdi zmdi-twitter"></i></a></li>
+                <li><a href="#"><i class="display-flex-center zmdi zmdi-facebook"></i></a></li>*@
+            <div class="form-group">
+                <a class="btn btn-google btn-circle " href="#" onclick="$('.0').trigger('click' )"> <i class="display-flex-center zmdi zmdi-google bi bi-google"></i></a>
+                <a class="btn btn-facebook badge-primary" href="#" onclick="$('.1').trigger('click' )"> <i class="display-flex-center bi bi-facebook"></i></a>
+            </div>
+
+
+        </div>
+
+    </div>
+
+
+</div>
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

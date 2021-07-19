@@ -1,0 +1,132 @@
+﻿@model Model.EF.Slide
+
+@{
+    ViewBag.Title = "Cập nhật slide";
+    Layout = "~/Areas/Admin/Views/Shared/_Layouts.cshtml";
+}
+
+
+@section jsFooter{
+    <script>
+        @*import { Alert } from "../../../../Assets/admin/vendor/bootstrap/js/bootstrap.bundle";*@
+        $(function () {
+            //đăng kí sự kiện click của btnUpload
+            $('#btnUpload').click(function () {
+                $('#Upload').trigger('click');
+            });
+            //Bắt sự kiện change data của fileUpload
+            $('#Upload').change(function () {
+                //kiểm tra trình duyệt có hỗ trợ formdata
+                if (window.FormData !== undefined) {
+                    //Lấy dữ liệu trên fileUpload
+                    var fileUpload = $('#Upload').get(0);
+                    var files = fileUpload.files;
+                    //tao doi tuong formdata
+                    var formData = new FormData();
+                    //dua du lieu vao form
+                    formData.append('file', files[0]);
+                    $.ajax({
+
+                        type: 'POST',
+                        url: '/Admin/Product/ProcessUpload',
+                        contentType: false,
+                        processData: false,
+                        data: formData,
+                        success: function (urlImage) {
+                            $('#pictureUpload').attr('src', urlImage);
+                            $('#Image').val(urlImage);
+                        },
+                        error: function (err) {
+                            @*Alert('Có lỗi khi upload:' + err.statusText);*@
+                        }
+                    })
+                }
+            });
+        });
+    </script>
+}
+<div class="container">
+    @using (Html.BeginForm())
+    {
+        @Html.AntiForgeryToken()
+
+        <div class="form-horizontal">
+            <h4>Slide</h4>
+            <hr />
+            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+            <div class="form-group">
+                @Html.LabelFor(model => model.Image, htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    <div class="form-inline">
+                        @Html.EditorFor(model => model.Image, new { htmlAttributes = new { @class = "form-control" } })
+                        <input type="file" id="Upload" hidden />
+                        <input type="button" id="btnUpload" value="..." class="btn-success" />
+                        <hr />
+                    </div>
+                    @{ try
+                        {
+                            if (Model.Image.Length > 0)
+                            {
+                                <img id="pictureUpload" src="@Model.Image" width="250" />
+                            }
+                            else
+                            {
+                                <img id="pictureUpload" width="250" />
+                            }
+
+                        }
+                        catch
+                        {
+                            <img id="pictureUpload" width="250" />
+                        }
+
+
+                    }
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.DisplayOrder, htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.EditorFor(model => model.DisplayOrder, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.DisplayOrder, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.Link, htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.EditorFor(model => model.Link, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.Link, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.Description, htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.TextAreaFor(model => model.Description, new { @class = "form-control" })
+                    @Html.ValidationMessageFor(model => model.Description, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.Status, htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    <div class="checkbox">
+                        @Html.CheckBoxFor(model => model.Status, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.Status, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="col-md-offset-2 col-md-10">
+                    <button class="btn btn-primary">Lưu</button>
+                </div>
+            </div>
+        </div>
+    }
+
+
+</div>
+

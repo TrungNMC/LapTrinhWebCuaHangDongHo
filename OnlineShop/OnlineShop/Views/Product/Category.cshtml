@@ -1,0 +1,125 @@
+﻿@model List<Model.EF.Product>
+@{
+    var category = (Model.EF.ProductCategory)ViewBag.Category;
+    ViewBag.Title = category.Name;
+    ViewBag.Keywords = category.MetaKeywords;
+    ViewBag.Descriptions = category.MetaDescriptions;
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@using Model.Dao;
+<!-- SECTION -->
+<div class="section">
+    <!-- container -->
+    <div class="container">
+        <!-- row -->
+        <div class="row">
+            <!-- STORE -->
+            <div id="store" class="col-md-12">
+                <!-- store products -->
+                <div class="row">
+                    <!-- product -->
+                    <h1><span>Thương hiệu: </span>@category.Name</h1>
+                    @foreach (var item in Model)
+                    {
+                        var url = "/chi-tiet/" + item.MetaTitle + "-" + item.ID;
+                        if (item.PromotionPrice != null)
+                        {
+                            <div class="product col-xs-3">
+                                <div class="product-img">
+                                    <a href="@url"><img src="@item.Image" width="262" height="170" alt="@item.Name"></a>
+                                </div>
+                                <div class="product-body" style="height:150px">
+                                    <h5 class="product-name"><a href="#">@item.Name</a></h5>
+                                    <h5 class="product-price" style="text-decoration: line-through">@(item.Price.HasValue?item.Price.Value.ToString("N0"):"Liên hệ")</h5>
+                                    <h5 class="product-price">@(item.PromotionPrice.HasValue?item.PromotionPrice.Value.ToString("N0"):"Liên hệ")</h5>
+                                    <h5>@(item.Status? "Còn hàng":"Hết hàng")</h5>
+                                    <div class="product-rating">
+                                        @for (int i = 0; i < (new RatingDao().SumStar(item.ID)); i++)
+                                        {
+                                            <i class="fa fa-star"></i>
+                                        }
+                                    </div>
+                                </div>
+                                <div class="add-to-cart" style="width:260px">
+                                    <h4 class="add-to-cart-btn"><i class="fa fa-shopping-cart"></i><a href="/them-gio-hang?productId=@item.ID&quantity=1">Thêm vào giỏ hàng</a></h4>
+                                </div>
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="product col-xs-3">
+                                <div class="product-img">
+                                    <a href="@url"><img src="@item.Image" width="262" height="170" alt="@item.Name"></a>
+                                </div>
+                                <div class="product-body" style="height:150px">
+                                    <h5 class="product-name"><a href="#">@item.Name</a></h5>
+                                    <h5 class="product-price">@(item.Price.HasValue?item.Price.Value.ToString("N0"):"Liên hệ")</h5>
+                                    <h5>@(item.Status? "Còn hàng":"Hết hàng")</h5>
+                                    <div class="product-rating">
+                                        @for (int i = 0; i < (new RatingDao().SumStar(item.ID)); i++)
+                                        {
+                                            <i class="fa fa-star"></i>
+                                        }
+                                    </div>
+                                </div>
+                                <div class="add-to-cart" style="width:260px">
+                                    <h4 class="add-to-cart-btn"><i class="fa fa-shopping-cart"></i><a href="/them-gio-hang?productId=@item.ID&quantity=1">Thêm vào giỏ hàng</a></h4>
+                                </div>
+                            </div>
+                        }
+                    }
+                    @if (ViewBag.totalPage > 1)
+                    {
+                        var pageDisplay = (int)ViewBag.maxPage;
+                        int totalPage = (int)ViewBag.totalPage;
+                        int currentPage = (int)ViewBag.Page;
+                        var startPageIndex = Math.Max(1, currentPage - pageDisplay / 2);
+                        var endPageIndex = Math.Min(totalPage, currentPage + pageDisplay / 2);
+                        var link = "/san-pham/" + category.MetaTitle + "-" + category.ID;
+                        <nav>
+                            <ul class="pagination">
+                                @if (currentPage > ViewBag.First)
+                                {
+                                    <li><a href="@link?page=@ViewBag.First" title="Trang đầu" class="first"><i class="fa fa-angle-double-left"></i></a></li>
+                                    <li>
+                                        <a href="@link?page=@ViewBag.Prev" title="Trang trước" class="prev"><i class="fa fa-angle-left"></i></a>
+                                    </li>
+
+                                }
+                                @for (int i = startPageIndex; i <= endPageIndex; i++)
+                                {
+                                    if (currentPage == i)
+                                    {
+
+                                        <li> <a href="@link?page=@i" class="active" title="Trang @i">@i</a></li>
+                                    }
+                                    else
+                                    {
+                                        <li><a href="@link?page=@i" title="Trang @i" class="pos">@i</a></li>
+                                    }
+                                }
+                                @if (currentPage < totalPage)
+                                {
+                                    <li><a href="@link?page=@ViewBag.Next" class="next" title="Trang sau"><i class="fa fa-angle-right"></i></a></li>
+                                    <li> <a href="@link?page=@ViewBag.Last" class="last" title="Trang cuối"><i class="fa fa-angle-double-right"></i></a></li>
+                                }
+
+                            </ul>
+                        </nav>
+                    }
+                    else
+                    {
+                        <span>Không có sản phẩm nào</span>
+                    }
+                </div>
+                <!-- /product -->
+                <div class="clearfix visible-lg visible-md visible-sm visible-xs"></div>
+                <!-- /store products -->
+            </div>
+            <!-- /STORE -->
+        </div>
+        <!-- /row -->
+    </div>
+    <!-- /container -->
+</div>
+<!-- /SECTION -->

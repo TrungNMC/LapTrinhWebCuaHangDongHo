@@ -1,0 +1,253 @@
+﻿@using Model.Dao;
+@using Model.EF;
+@{
+    ViewBag.Title = "Trang chủ";
+    Layout = "~/Areas/Admin/Views/Shared/_Layouts.cshtml";
+    var listSta = (List<Model.ViewModel.StatisticalModel>)ViewBag.listSta;
+}
+
+@section jsFooter{
+      <script type="text/javascript">
+
+          $(document).ready(function () {
+              $.ajax({
+                  url: "/Admin/Home/thongke1",
+                  type: "post",
+                  success: function (data) {
+                      load(data)
+                  }
+              })
+
+
+              google.charts.load('current', { 'packages': ['corechart'] });
+              google.charts.setOnLoadCallback(drawChart);
+              var arr = [];
+
+
+              function drawChart() {
+                  $.ajax({
+                      url: "/Admin/Home/thongke",
+                      type: "post",
+                      success: function (data1) {
+
+                          var data = new google.visualization.DataTable();
+                          data.addColumn('string', 'Pizza');
+                          data.addColumn('number', 'Populartiy');
+
+                          $.each(data1.arr, function (k, v) {
+
+                              data.addRows([[v.name, v.sl]]);
+                          });
+
+
+
+
+                          //  console.log(data.wf);
+                          var options = {
+                              title: 'Biểu đồ đánh Loại sản phẩm',
+                              //  sliceVisibilityThreshold: .2
+                          };
+
+                          var chart = new google.visualization.PieChart(document.getElementById('piechart'));
+
+                          chart.draw(data, options);
+                      }
+
+                  });
+                  //console.log(arr);
+
+              }
+
+          });
+          function load(data) {
+              var totalIncomeChart = document.getElementById('totalIncomeChart').getContext('2d');
+
+              var mytotalIncomeChart = new Chart(totalIncomeChart, {
+                  type: 'line',
+                  data: {
+                      labels: data.arr,
+                      datasets: [{
+                          label: "Total Income",
+                          lineTension: 0.3,
+                          backgroundColor: "rgba(78, 115, 223, 0.05)",
+                          borderColor: "rgba(78, 115, 223, 1)",
+                          pointRadius: 3,
+                          pointBackgroundColor: "rgba(78, 115, 223, 1)",
+                          pointBorderColor: "rgba(78, 115, 223, 1)",
+                          pointHoverRadius: 3,
+                          pointHoverBackgroundColor: "rgba(78, 115, 223, 1)",
+                          pointHoverBorderColor: "rgba(78, 115, 223, 1)",
+                          pointHitRadius: 10,
+                          pointBorderWidth: 2,
+                          data: data.arr1,
+                      }],
+                  },
+                  options: {
+                      responsive: true,
+                      maintainAspectRatio: false,
+                      legend: {
+                          display: false,
+                      },
+                      scales: {
+                          yAxes: [{
+                              ticks: {
+                                  display: false //this will remove only the label
+                              },
+                              gridLines: {
+                                  drawBorder: false,
+                                  display: false
+                              }
+                          }],
+                          xAxes: [{
+                              gridLines: {
+                                  drawBorder: false,
+                                  display: false
+                              }
+                          }]
+                      },
+                  }
+              });
+          }
+          
+
+    </script>
+
+       
+    }
+<div class="panel-header bg-primary-gradient">
+    <div class="page-inner py-4">
+        <div class="d-flex align-items-left align-items-md-center flex-column flex-md-row">
+            <div>
+                <h2 class="text-white pb-2 fw-bold">Trang chủ</h2>
+
+            </div>
+
+        </div>
+    </div>
+</div>
+<div class="page-inner  mt--5">
+
+    <!-- Card With Icon States Color -->
+    <!-- Card With Icon States Background -->
+    <div class="row">
+        <div class="col-sm-6 col-md-3">
+            <div class="card card-stats card-round">
+                <div class="card-body ">
+                    <div class="row align-items-center">
+                        <div class="col-icon">
+                            <div class="icon-big text-center icon-primary bubble-shadow-small">
+                                <i class="flaticon-users"></i>
+                            </div>
+                        </div>
+                        <div class="col col-stats ml-3 ml-sm-0">
+                            <div class="numbers">
+                                <p class="card-category">Khách Hàng</p>
+                                <h4 class="card-title">@(new OnlineShopDbContext().Orders.Select(x=>x.ShipEmail).ToList().Distinct().Count() )</h4>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-6 col-md-3">
+            <div class="card card-stats card-round">
+                <div class="card-body">
+                    <div class="row align-items-center">
+                        <div class="col-icon">
+                            <div class="icon-big text-center icon-info bubble-shadow-small">
+                                <i class="flaticon-coins text-success"></i>
+                            </div>
+                        </div>
+                        <div class="col col-stats ml-3 ml-sm-0">
+                            <div class="numbers">
+                                <p class="card-category">Tổng lợi nhuận</p>
+                                <h4 class="card-title">@(new StatisticalDao().countbenefit().ToString("N0")) $</h4>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-6 col-md-3">
+            <div class="card card-stats card-round">
+                <div class="card-body">
+                    <div class="row align-items-center">
+                        <div class="col-icon">
+                            <div class="icon-big text-center icon-success bubble-shadow-small">
+
+                                <i class="fa fa-dollar-sign"></i>
+                            </div>
+                        </div>
+                        <div class="col col-stats ml-3 ml-sm-0">
+                            <div class="numbers">
+                                <p class="card-category">Tổng Doanh thu</p>
+                                <h4 class="card-title"> @(new StatisticalDao().countrevenue().ToString("N0")) $</h4>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-6 col-md-3">
+            <div class="card card-stats card-round">
+                <div class="card-body">
+                    <div class="row align-items-center">
+                        <div class="col-icon">
+                            <div class="icon-big text-center icon-secondary bubble-shadow-small">
+                                <i class="flaticon-success"></i>
+                            </div>
+                        </div>
+                        <div class="col col-stats ml-3 ml-sm-0">
+                            <div class="numbers">
+                                <p class="card-category">Đơn đặt</p>
+                                <h4 class="card-title">@(new OrderDao().counttask().ToString())</h4>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row mt--2">
+        <div class="col-md-6">
+            <div class="card full-height">
+                <div class="card-body">
+                    <div class="card-title">Thống kê sản phẩm</div>
+                  
+                    <div class="d-flex flex-wrap justify-content-around pb-2 pt-4">
+                        @*<div class="px-2 pb-2 pb-md-0 text-center">
+            <div id="circles-1"></div>
+            <h6 class="fw-bold mt-3 mb-0">New Users</h6>
+        </div>
+        <div class="px-2 pb-2 pb-md-0 text-center">
+            <div id="circles-2"></div>
+            <h6 class="fw-bold mt-3 mb-0">Sales</h6>
+        </div>
+        <div class="px-2 pb-2 pb-md-0 text-center">
+            <div id="circles-3"></div>
+            <h6 class="fw-bold mt-3 mb-0">Subscribers</h6>
+        </div>*@
+                        <div id="piechart" style="width: 900px; height: 300px;"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card full-height">
+                <div class="card-body">
+                    <div class="card-title">Doanh thu hàng tuần</div>
+                    <div class="row py-3">
+                   
+                        <div class="col-md-12">
+                            
+                                <canvas id="totalIncomeChart"style="width: 900px; height: 250px;"></canvas>
+                         
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Row Card No Padding -->
+
+</div>

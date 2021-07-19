@@ -1,0 +1,20 @@
+﻿@model OnlineShop.Models.ExternalLoginListViewModel
+@using Microsoft.Owin.Security
+
+@{
+    var loginProviders = Context.GetOwinContext().Authentication.GetExternalAuthenticationTypes();
+    using (Html.BeginForm("ExternalLogin", "Account", new { ReturnUrl = Model.ReturnUrl }))
+    {
+        @Html.AntiForgeryToken()
+        int i = 0;
+        foreach (AuthenticationDescription p in loginProviders)
+        {
+
+            <button hidden style="width:35px;height:35px;border-radius:20px ;background-color:#f00505" class="@i" type="submit" id="@p.AuthenticationType" name="provider" value="@p.AuthenticationType" title="Log in using your @p.Caption account"><i class=" bi bi-google"></i></button>
+            i++;
+        }
+
+
+    }
+
+}

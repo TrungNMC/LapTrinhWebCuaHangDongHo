@@ -1,0 +1,35 @@
+﻿@model IEnumerable<Model.EF.About>
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="content">
+    <div class="content_top">
+        <div class="heading">
+            <h3>Giới thiệu</h3>
+        </div>
+        <div class="see">
+
+        </div>
+        <div class="clear"></div>
+    </div>
+    @foreach (var item in Model)
+    {
+        if (@item.Status)
+        {
+<div class="col-md-12">
+    <div class="image group">
+        <div class="col-md-4">
+            <a href="/tin-tuc/@item.MetaTitle-@item.ID"><img src="@item.Image" alt="" width="350" height="190" /></a>
+        </div>
+        <div class="col-md-8" style="height:200px">
+            <h3><span>Tên bài viết: </span><a href="/tin-tuc/@item.MetaTitle-@item.ID">@item.Name </a></h3>
+            <span><span>Mô tả: </span>@Html.Raw(item.Description)</span>
+        </div>
+    </div>
+</div>
+        }
+    }
+</div>

@@ -1,0 +1,264 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <link rel="icon" href="/Assets/img/icon.ico" type="image/x-icon" />
+    <title>@ViewBag.Title</title>
+    <meta name="keywords" content="@ViewBag.Keywords" />
+    <meta name="description" content="@ViewBag.Descriptions" />
+
+    <!-- Google font -->
+    <link href="https://fonts.googleapis.com/css?family=Montserrat:400,500,700" rel="stylesheet">
+
+    <!-- Bootstrap -->
+    <link type="text/css" rel="stylesheet" href="/Assets/client/css/bootstrap.min.css" />
+
+    <!-- Slick -->
+    <link type="text/css" rel="stylesheet" href="/Assets/client/css/slick.css" />
+    <link type="text/css" rel="stylesheet" href="/Assets/client/css/slick-theme.css" />
+
+    <!-- nouislider -->
+    <link type="text/css" rel="stylesheet" href="/Assets/client/css/nouislider.min.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css">
+    <!-- Font Awesome Icon -->
+    <link rel="stylesheet" href="/Assets/client/css/font-awesome.min.css">
+    <link href="/Assets/client/css/boostrap-social.css" rel="stylesheet" />
+    <link href="/Assets/client/css/jquery-ui.css" rel="stylesheet" />
+    <!-- Custom stlylesheet -->
+    <link type="text/css" rel="stylesheet" href="/Assets/client/css/style.css" />
+    <link href="/Assets/client/css/slider.css" rel="stylesheet" />
+    <style>
+        #dialog {
+            width: 100%;
+            height: 100%;
+            top: 0;
+            bottom: 0;
+            overflow: hidden;
+            left: 0;
+            right: 0;
+            position: fixed;
+            z-index: 100;
+            overflow: hidden;
+            text-align: center;
+            background-color: rgb(68 65 65 / 0.78);
+        }
+
+        #dialog1 {
+            width: 30%;
+            height: 30%;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            position: fixed;
+            z-index: 100;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="dialog" onclick="Close()" style="text-align:center">
+
+
+    </div>
+    <div id="dialog1" style="margin-left:35%;margin-top:10%">
+
+        @{ Html.RenderAction("Login", "Account");}
+    </div>
+    <!-- HEADER -->
+
+    <header>
+        <!-- TOP HEADER -->
+        @{ Html.RenderAction("TopMenu", "Home");}
+        <!-- /TOP HEADER -->
+        <!-- MAIN HEADER -->
+        <div id="header">
+
+            <!-- container -->
+            <div class="container">
+                <!-- row -->
+                <div class="row">
+                    <!-- LOGO -->
+                    <div class="col-md-3">
+                        <div class="header-logo">
+                            <a href="#" class="logo">
+                                <img src="./img/logo.png" alt="">
+                            </a>
+                        </div>
+                    </div>
+                    <!-- /LOGO -->
+                    <!-- SEARCH BAR -->
+                    <div class="col-md-6">
+                        <div class="header-search">
+                            <form action="/tim-kiem" method="get">
+                                <input class="input" type="text" id="txtKeyword" name="keyword" placeholder="Gõ từ khoá">
+                                <button class="search-btn">Search</button>
+                            </form>
+                        </div>
+                        <div class="clear"></div>
+                    </div>
+                    <!-- /SEARCH BAR -->
+                    <!-- ACCOUNT -->
+                    <div class="col-md-3 clearfix">
+                        <div class="header-ctn">
+                            <!-- Cart -->
+                            @{ Html.RenderAction("HeaderCart", "Home");}
+                            <!-- /Cart -->
+                        </div>
+                    </div>
+                    <!-- /ACCOUNT -->
+                </div>
+                <!-- row -->
+            </div>
+            <!-- container -->
+        </div>
+        <!-- /MAIN HEADER -->
+    </header>
+    <!-- /HEADER -->
+    <!-- NAVIGATION -->
+    <nav id="navigation">
+        <!-- container -->
+        <div class="container">
+            <!-- responsive-nav -->
+            <div id="responsive-nav">
+                <!-- NAV -->
+
+                @{Html.RenderAction("MainMenu", "Home");}
+                <!-- /NAV -->
+            </div>
+            <!-- /responsive-nav -->
+        </div>
+        <!-- /container -->
+    </nav>
+    <!-- /NAVIGATION -->
+    <!-- SECTION -->
+    <div class="section">
+        <!-- container -->
+        <div class="container">
+            <!-- row -->
+            <div class="row">
+                @RenderBody()
+            </div>
+            <!-- /row -->
+        </div>
+        <!-- /container -->
+    </div>
+    <!-- /SECTION -->
+    <!-- FOOTER -->
+    @{ Html.RenderAction("Footer", "Home");}
+
+    <!-- /FOOTER -->
+    <!-- jQuery Plugins -->
+    <script>window.MBID = "1Rheric1T";</script>
+    <script defer src="https://menu.metu.vn/static/js/sdk.js?container=body"></script>
+
+    <!-- Messenger Plugin chat Code -->
+    <div id="fb-root"></div>
+
+    <!-- Your Plugin chat code -->
+    <div id="fb-customer-chat" class="fb-customerchat">
+    </div>
+
+    <script>
+
+        var chatbox = document.getElementById('fb-customer-chat');
+        chatbox.setAttribute("page_id", "109477347973637");
+        chatbox.setAttribute("attribution", "biz_inbox");
+        window.fbAsyncInit = function () {
+            FB.init({
+                xfbml: true,
+                version: 'v11.0'
+            });
+        };
+
+        (function (d, s, id) {
+            var js, fjs = d.getElementsByTagName(s)[0];
+            if (d.getElementById(id)) return;
+            js = d.createElement(s); js.id = id;
+            js.src = 'https://connect.facebook.net/vi_VN/sdk/xfbml.customerchat.js';
+            fjs.parentNode.insertBefore(js, fjs);
+        }(document, 'script', 'facebook-jssdk'));
+    </script>
+
+    <script src="/Assets/client/js/jquery.min.js"></script>
+    <script src="/Assets/client/js/jquery-ui.js"></script>
+    <script src="/Assets/client/js/bootstrap.min.js"></script>
+    <script src="/Assets/client/js/slick.min.js"></script>
+    <script src="/Assets/client/js/nouislider.min.js"></script>
+    <script src="/Assets/client/js/jquery.zoom.min.js"></script>
+    <script src="/Assets/client/js/main.js"></script>
+    <script src="/Assets/client/js/controller/baseController.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/owl.carousel.min.js"></script>
+
+    <script>
+        function Close() {
+            $('#dialog').hide();
+            $('#dialog1').hide();
+        }
+        function Open() {
+
+            $('#dialog').slideDown();
+            $('#dialog1').slideDown();
+
+        }
+
+        $(document).ready(function () {
+            Close()
+            $('#btnDangnhap').click(function () {
+                var email = $('#txtemail').val();
+                var pass = $('#txtpass').val();
+                $('#messemail').text("");
+                $('#txtmess').text("")
+                $('#messpasss').text("");
+                if (email.length == 0) {
+                    $('#messemail').text("Bạn chưa nhập tên đăng nhập");
+                }
+                if (pass.length == 0) {
+                    $('#messpasss').text("Bạn chưa nhập mật khẩu");
+                }
+                if (email.length > 0 && pass.length > 0) {
+                    $.ajax({
+                        type: "post",
+                        data: { email: email, pass: pass },
+                        url: "/Account/KiemTra",
+                        success: function (data) {
+                            if (data.code == 100) {
+                                alert("Đăng nhập thành công")
+                                window.location = "/Home/Index"
+                            }
+                            else if (data.code == 600) {
+                                window.location = "/gio-hang"
+                            }
+                            else if (data.code == 300) {
+                                $('#txtmess').text("Tài khoản đang bị khóa")
+                            }
+                            else if (data.code == 200) {
+                                $('#messemail').text("Tài khoản không tồn tại.");
+                            }
+                            else if (data.code == 400) {
+                                $('#messpasss').text("Mật khẩu không đúng.");
+                            }
+                            else if (data.code == 500) {
+                                $('#txtmess').text("Đăng nhập không đúng!")
+                            }
+                        }
+
+
+                    });
+                }
+
+            });
+
+
+        });
+
+    </script>
+    <script src="//cdn.ckeditor.com/4.15.0/standard/ckeditor.js"></script>
+
+    @RenderSection("jsFooter", required: false)
+</body>
+</html>

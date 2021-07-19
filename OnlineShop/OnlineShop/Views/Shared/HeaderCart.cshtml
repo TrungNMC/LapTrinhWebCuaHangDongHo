@@ -1,0 +1,42 @@
+﻿@model List<OnlineShop.Models.CartItem>
+<div class="dropdown">
+    @if (Model.Count == 0)
+    {
+        <a href="/gio-hang" class="dropdown-toggle">
+            <i class="fa fa-shopping-cart"></i>
+            <span>Giỏ hàng</span>
+
+        </a>
+    }
+    @if (Model.Count >0)
+    {
+        <a href="/gio-hang" class="dropdown-toggle">
+            <i class="fa fa-shopping-cart"></i>
+            <span>Giỏ hàng</span>
+            <div class="qty">@Model.Count</div>
+        </a>
+    }
+
+    @*<div class="cart-dropdown">
+            <div class="cart-list">
+                @foreach (var item in Model)
+                {
+
+                <div class="product-widget">
+                    <tr>
+                        <td>@item.Product.Name</td>
+                        <td><img src="@item.Product.Image" width="100" /></td>
+                        <td>@item.Product.Price.GetValueOrDefault(0).ToString("N0")<span> VNĐ</span></td>
+                    </tr>
+                    <div>
+                        <td><a href="#" data-id="@item.Product.ID" class="btndelete">Xóa</a></td>
+                    </div>
+                </div>
+                }
+
+            </div>
+            <div class="cart-btns" style="text-align:center">
+                <a href="/gio-hang">View Cart</a>
+            </div>
+        </div>*@
+</div>

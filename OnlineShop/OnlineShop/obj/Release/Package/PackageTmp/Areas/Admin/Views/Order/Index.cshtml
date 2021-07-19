@@ -1,0 +1,82 @@
+﻿@model PagedList.IPagedList<Model.EF.Order>
+@using PagedList.Mvc;
+@{
+    ViewBag.Title = "Quản lí đặt hàng";
+    Layout = "~/Areas/Admin/Views/Shared/_Layouts.cshtml";
+}
+
+
+@section jsFooter{
+    <script src="/Assets/admin/js/controller/cartController.js"></script>
+}
+<div class="row">
+<div class="col-lg-12">
+    <div class="card shadow mb-4">
+        <div class="card-header py-3">
+            <h6 class="m-0 font-weight-bold text-primary">Danh sách khách hàng</h6>
+        </div>
+        <div class="card-header">
+            <div class="d-flex align-items-center">
+                <div class="ml-auto col-md-6">
+                    @using (Html.BeginForm("Index", "Order", FormMethod.Get))
+                    {
+                        <div class="row mb-3">
+                            <div class="col-sm-7">
+                                <input type="text" class="form-control" value="@ViewBag.SearchString" name="searchString" />
+                            </div>
+
+                            <button type="submit" class="btn btn-success btn-round">Tìm kiếm</button>
+                           
+                        </div>
+
+                    }
+
+                </div>
+
+
+            </div>
+        </div>
+
+        <div class="table-responsive">
+            <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Tên</th>
+                        <th>Email</th>
+                        <th>Địa chỉ</th>
+                        <th>Số điện thoại</th>
+                        <th>Ngày đặt hàng</th>
+
+                        <th>#</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model.Where(x=>x.Status<4))
+                    {
+                        <tr id="row_@item.ID">
+
+                            <td>@item.ID</td>
+                            <td>@item.ShipName</td>
+                            <td>@item.ShipEmail</td>
+                            <td>@item.ShipAddress</td>
+                            <td>@item.ShipMobile</td>
+                            <td>@item.CreatedDate</td>
+
+                            @*<td><a href="#" class="btn-active" data-id="@item.ID">@(item.Status "Hoàn thành":"Đang xử lí")</a></td>*@
+                            <td>
+                                <a href="/Admin/Order/Edit/@item.ID">Xem đơn hàng</a>
+
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+            @Html.PagedListPager(Model, page => Url.Action("Index", new { page, @searchString = @ViewBag.SearchString }))
+        </div>
+
+    </div>
+
+</div>
+        </div>
+   

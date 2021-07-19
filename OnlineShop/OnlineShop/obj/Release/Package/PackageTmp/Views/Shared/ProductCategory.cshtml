@@ -1,0 +1,13 @@
+﻿@model List<Model.EF.ProductCategory>
+
+<div class="categories">
+    <h2  data-target="#demo">Thương hiệu</h2>
+    <div class="categorie " id="demo">
+        <ul>
+            @foreach (var item in Model)
+            {
+                <Li><a href="/san-pham/@item.MetaTitle-@item.ID"><img src=""><span style="font-size:large">@item.Name</span></a></Li>
+            }
+        </ul>
+    </div>
+</div>

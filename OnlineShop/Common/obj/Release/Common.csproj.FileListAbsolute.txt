@@ -1,0 +1,6 @@
+C:\Users\PhamTrongTruong\Desktop\LapTrinhWeb\Thuctapchuyenmon\Common\bin\Release\Common.dll
+C:\Users\PhamTrongTruong\Desktop\LapTrinhWeb\Thuctapchuyenmon\Common\bin\Release\Common.pdb
+C:\Users\PhamTrongTruong\Desktop\LapTrinhWeb\Thuctapchuyenmon\Common\obj\Release\Common.csprojAssemblyReference.cache
+C:\Users\PhamTrongTruong\Desktop\LapTrinhWeb\Thuctapchuyenmon\Common\obj\Release\Common.csproj.CoreCompileInputs.cache
+C:\Users\PhamTrongTruong\Desktop\LapTrinhWeb\Thuctapchuyenmon\Common\obj\Release\Common.dll
+C:\Users\PhamTrongTruong\Desktop\LapTrinhWeb\Thuctapchuyenmon\Common\obj\Release\Common.pdb

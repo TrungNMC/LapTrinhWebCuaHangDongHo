@@ -1,0 +1,67 @@
+﻿@model PagedList.IPagedList<Model.EF.OrderDetail>
+@using PagedList.Mvc;
+@{
+    ViewBag.Title = "Quản lí chi tiết đơn hàng";
+    Layout = "~/Areas/Admin/Views/Shared/_Layouts.cshtml";
+}
+
+@section jsFooter{
+    
+}
+<div class="row">
+    <div class="col-lg-12">
+        <div class="card shadow mb-4">
+            <div class="card-body">
+                @using (Html.BeginForm("Index", "OrderDetail", FormMethod.Get))
+                {
+                    <div class="row form-group">
+                        <div class="col-lg-12">
+                            <div class="col-md-12">
+                                <input type="text" value="@ViewBag.SearchString" name="searchString" />
+                                <button type="submit" class="btn btn-success">Tìm kiếm</button>
+                            </div>
+                        </div>
+                    </div>
+                }
+                <div class="table-responsive">
+                    <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                        <thead>
+                            <tr>
+                                <th>Mã khách hàng</th>
+                                <th>Mã sản phẩm</th>
+                                <th>Số lượng</th>
+                                <th>Giá</th>
+                                <th>Tổng tiền</th>
+                                <th>#</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model)
+                            {
+                            <tr id="row_@item.ID">
+
+                                <td>@item.OrderID</td>
+                                <td>@item.ProductID</td>
+                                <td>@item.Quantity</td>
+                                <td>@(item.Price.HasValue? item.Price.Value.ToString("N0"):"Liên hệ")</td>
+                                <td>@(item.Price * item.Quantity)</td>
+                                <td>
+                                    <a href="/Admin/OrderDetail/Edit/@item.ID">Sửa</a>
+                                    |
+                                    @Ajax.ActionLink("Xóa", "Delete", new { @id = item.ID }, new AjaxOptions
+                                    {
+                                        Confirm = "Bạn có muốn xóa bản ghi này?",
+                                        OnComplete = "$('#row_" + @item.ID + "').remove()",
+                                        HttpMethod = "Delete"
+                                    })
+                                </td>
+                            </tr>
+                            }
+                        </tbody>
+                    </table>
+                    @Html.PagedListPager(Model, page => Url.Action("Index", new { page, @searchString = @ViewBag.SearchString }))
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

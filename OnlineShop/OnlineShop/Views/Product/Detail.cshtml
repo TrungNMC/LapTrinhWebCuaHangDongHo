@@ -1,0 +1,402 @@
+﻿@model Model.EF.Product
+@{
+    ViewBag.Title = Model.Name;
+    ViewBag.Keywords = Model.MetaKeywords;
+    ViewBag.Descriptions = Model.MetaDescriptions;
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var category = (Model.EF.ProductCategory)ViewBag.Category;
+    var relatedProducts = (List<Model.EF.Product>)ViewBag.RelatedProducts;
+    var showcomment= (List<Model.ViewModel.RatingModel>)ViewBag.ShowComment;
+
+  
+}
+@using Model.Dao;
+@section jsFooter{
+    <script src="/Assets/client/js/controller/ratingcontroller.js"></script>    
+}
+<!-- BREADCRUMB -->
+<div id="breadcrumb" class="section">
+    <!-- container -->
+    <div class="container">
+        <!-- row -->
+        <div class="row">
+            <div class="col-md-12">
+                <ul class="breadcrumb-tree">
+                    <li><a href="/">Trang chủ</a></li>
+                    <li><a href="/san-pham/@category.MetaTitle-@category.ID">@category.Name</a></li>>
+                </ul>
+            </div>
+        </div>
+        <!-- /row -->
+    </div>
+    <!-- /container -->
+</div>
+<!-- /BREADCRUMB -->
+<!-- SECTION -->
+<div class="section">
+    <!-- container -->
+    <div class="container">
+        <!-- row -->
+        <div class="row">
+            <!-- Product main img -->
+            <div class="col-md-5 col-md-push-2">
+                <div id="product-main-img">
+                    <div class="product-preview">
+                        <img src="@Model.Image" alt="">
+                    </div>
+                </div>
+            </div>
+            <!-- /Product main img -->
+            <!-- Product thumb imgs -->
+            <div class="col-md-2  col-md-pull-5">
+                <div id="product-imgs">
+                    <div class="product-preview">
+                        <img src="@Model.MoreImages" alt="">
+                    </div>
+
+                    <div class="product-preview">
+                        <img src="./img/product03.png" alt="">
+                    </div>
+
+                    <div class="product-preview">
+                        <img src="./img/product06.png" alt="">
+                    </div>
+
+                    <div class="product-preview">
+                        <img src="./img/product08.png" alt="">
+                    </div>
+                </div>
+            </div>
+            <!-- /Product thumb imgs -->
+            <!-- Product details -->
+            <div class="col-md-5">
+                <div class="product-details">
+                    <h2 class="product-name">@Model.Name</h2>
+                    <div>
+                        <div class="product-rating">
+                            @for (int i = 0; i < (new RatingDao().SumStar(Model.ID)); i++)
+                            {
+                                <i class="fa fa-star"></i>
+                            }
+                        
+                        </div>
+                    </div>
+                    <div>
+                        @if (Model.PromotionPrice != null)
+                        {
+                            <h3 class="product-price" style="text-decoration: line-through"> Giá: <span>@(Model.Price.HasValue? Model.Price.Value.ToString("N0"):"Liên hệ")</span> VND</h3>
+                            <h3 class="product-price"> Giá khuyến mãi: <span>@(Model.PromotionPrice.HasValue? Model.PromotionPrice.Value.ToString("N0"):"Liên hệ")</span> VND</h3>
+                        }
+                        else
+                        {
+                            <h3 class="product-price"> Giá: <span>@(Model.Price.HasValue? Model.Price.Value.ToString("N0"):"Liên hệ")</span> VND</h3>
+                        }
+                        <h3 class="product-available">@(Model.Status? "Còn hàng":"Hết hàng")</h3>
+                    </div>
+                    <p>@Html.Raw(Model.Description)</p>
+                    <div class="add-to-cart">
+                        <button class="add-to-cart-btn"><i class="fa fa-shopping-cart"></i><a href="/them-gio-hang?productId=@Model.ID&quantity=1">Thêm vào giỏ hàng</a></button>
+                    </div>
+                    <ul class="product-links">
+                        <li>Share:</li>
+                        <li><a href="#"><i class="fa fa-facebook"></i></a></li>
+                        <li><a href="#"><i class="fa fa-twitter"></i></a></li>
+                        <li><a href="#"><i class="fa fa-google-plus"></i></a></li>
+                        <li><a href="#"><i class="fa fa-envelope"></i></a></li>
+                    </ul>
+
+                </div>
+            </div>
+            <!-- /Product details -->
+            <div class="col-md-12">
+                <div id="product-tab">
+                    <!-- product tab nav -->
+                    <ul class="tab-nav">
+                        <li class="active"><a data-toggle="tab" href="#tab1">Chi tiết</a></li>
+                        <li><a data-toggle="tab" href="#tab3">Đánh giá</a></li>
+                    </ul>
+                    <!-- /product tab nav -->
+                    <!-- product tab content -->
+                    <div class="tab-content">
+                        <!-- tab1  -->
+                        <div id="tab1" class="tab-pane fade in active">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <p>@Html.Raw(Model.Detail)</p>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- /tab1  -->
+                        <!-- tab3  -->
+                        <div id="tab3" class="tab-pane fade in">
+                            <div class="row">
+                                <!-- Rating -->
+                                <div class="col-md-3">
+                                    <div id="rating">
+                                        <div class="rating-avg">
+                                            <span>
+                                                @ViewBag.SumStar
+                                                @for (int i = 0; i < @ViewBag.SumStar; i++)
+                                                {
+                                                    <i class="fa fa-star"></i>
+                                                }
+                                            </span>
+                                        </div>
+                                        <ul class="rating">
+                                            <li>
+                                                <div class="rating-stars">
+                                                    <i class="fa fa-star"></i>
+                                                    <i class="fa fa-star"></i>
+                                                    <i class="fa fa-star"></i>
+                                                    <i class="fa fa-star"></i>
+                                                    <i class="fa fa-star"></i>
+                                                </div>
+                                                <div class="rating-progress">
+                                                    <div style="width: @ViewBag.Percent5Star%"></div>
+                                                </div>
+                                                <span class="sum">@ViewBag.Sum5Star</span>
+                                            </li>
+                                            <li>
+                                                <div class="rating-stars">
+                                                    <i class="fa fa-star"></i>
+                                                    <i class="fa fa-star"></i>
+                                                    <i class="fa fa-star"></i>
+                                                    <i class="fa fa-star"></i>
+                                                    <i class="fa fa-star-o"></i>
+                                                </div>
+                                                <div class="rating-progress">
+                                                    <div style="width: @ViewBag.Percent4Star%;"></div>
+                                                </div>
+                                                <span class="sum">@ViewBag.Sum4Star</span>
+                                            </li>
+                                            <li>
+                                                <div class="rating-stars">
+                                                    <i class="fa fa-star"></i>
+                                                    <i class="fa fa-star"></i>
+                                                    <i class="fa fa-star"></i>
+                                                    <i class="fa fa-star-o"></i>
+                                                    <i class="fa fa-star-o"></i>
+                                                </div>
+                                                <div class="rating-progress">
+                                                    <div style="width: @ViewBag.Percent3Star%;"></div>
+                                                </div>
+                                                <span class="sum">@ViewBag.Sum3Star</span>
+                                            </li>
+                                            <li>
+                                                <div class="rating-stars">
+                                                    <i class="fa fa-star"></i>
+                                                    <i class="fa fa-star"></i>
+                                                    <i class="fa fa-star-o"></i>
+                                                    <i class="fa fa-star-o"></i>
+                                                    <i class="fa fa-star-o"></i>
+                                                </div>
+                                                <div class="rating-progress">
+                                                    <div style="width: @ViewBag.Percent2Star%;"></div>
+                                                </div>
+                                                <span class="sum">@ViewBag.Sum2Star</span>
+                                            </li>
+                                            <li>
+                                                <div class="rating-stars">
+                                                    <i class="fa fa-star"></i>
+                                                    <i class="fa fa-star-o"></i>
+                                                    <i class="fa fa-star-o"></i>
+                                                    <i class="fa fa-star-o"></i>
+                                                    <i class="fa fa-star-o"></i>
+                                                </div>
+                                                <div class="rating-progress">
+                                                    <div style="width: @ViewBag.Percent1Star%;"></div>
+                                                </div>
+                                                <span class="sum">@ViewBag.Sum1Star</span>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                                <!-- /Rating -->
+                                <!-- Reviews -->
+                                <div class="col-md-6">
+                                    <div id="reviews">
+                                        <ul class="reviews">
+                                            @foreach (var item in showcomment)
+                                            {
+                                                <li>
+                                                    <div class="review-heading">
+                                                        <h5 class="name">@item.CustomerName</h5>
+                                                        <p class="date">@item.CommentedOn</p>
+                                                        <div class="review-rating">
+                                                            @for (int i = 0; i < item.Rate; i++)
+                                                            {
+                                                                <span class="fa fa-star"></span>
+                                                            }
+                                                            @for (int i = item.Rate; i < 5; i++)
+                                                            {
+                                                                <span class="fa fa-star-o"></span>
+                                                            }
+                                                        </div>
+                                                    </div>
+                                                    <div class="review-body">
+                                                        <p>@item.Comment</p>
+                                                    </div>
+                                                </li>
+
+                                            }
+                                        </ul>
+                                        <ul class="reviews-pagination">
+                                            @if (ViewBag.totalPage > 1)
+                                            {
+                                                var pageDisplay = (int)ViewBag.maxPage;
+                                                int totalPage = (int)ViewBag.totalPage;
+                                                int currentPage = (int)ViewBag.Page;
+                                                var startPageIndex = Math.Max(1, currentPage - pageDisplay / 2);
+                                                var endPageIndex = Math.Min(totalPage, currentPage + pageDisplay / 2);
+                                                var link = "/san-pham/";
+                                                <nav>
+                                                    <ul class="pagination">
+                                                        @if (currentPage > ViewBag.First)
+                                                        {
+                                                            <li><a href="@link?page=@ViewBag.First" title="Trang đầu" class="first"><i class="fa fa-angle-double-left"></i></a></li>
+                                                            <li>
+                                                                <a href="@link?page=@ViewBag.Prev" title="Trang trước" class="prev"><i class="fa fa-angle-left"></i></a>
+                                                            </li>
+
+                                                        }
+                                                        @for (int i = startPageIndex; i <= endPageIndex; i++)
+                                                        {
+                                                            if (currentPage == i)
+                                                            {
+
+                                                                <li> <a href="@link?page=@i" class="active" title="Trang @i">@i</a></li>
+                                                            }
+                                                            else
+                                                            {
+                                                                <li><a href="@link?page=@i" title="Trang @i" class="pos">@i</a></li>
+                                                            }
+                                                        }
+                                                        @if (currentPage < totalPage)
+                                                        {
+                                                            <li><a href="@link?page=@ViewBag.Next" class="next" title="Trang sau"><i class="fa fa-angle-right"></i></a></li>
+                                                            <li> <a href="@link?page=@ViewBag.Last" class="last" title="Trang cuối"><i class="fa fa-angle-double-right"></i></a></li>
+                                                        }
+
+                                                    </ul>
+                                                </nav>
+
+                                            }
+                                        </ul>
+                                    </div>
+                                </div>
+                                <!-- /Reviews -->
+                                <!-- Review Form -->
+                                <div class="col-md-3">
+                                    <div id="review-form">
+                                        <form class="review-form">
+                                            @{ var session = (UserLogin)Session[OnlineShop.Common.CommonConstants.USER_SESSION]; }
+                                            @if (session != null)
+                                            {
+                                                <input class="input" type="text" placeholder="Your Name" value="@session.Name">
+                                                <input class="input" type="email" placeholder="Your Email" value="@session.Email">
+                                                <textarea class="input" placeholder="Your Review" id="review" name="review"></textarea>
+                                                <div class="input-rating">
+                                                    <span>Your Rating: </span>
+                                                    <div class="stars">
+                                                        <input id="star5" name="rating" class="txtsao" value="5" type="radio"><label for="star5"></label>
+                                                        <input id="star4" name="rating" class="txtsao" value="4" type="radio"><label for="star4"></label>
+                                                        <input id="star3" name="rating" class="txtsao" value="3" type="radio"><label for="star3"></label>
+                                                        <input id="star2" name="rating" class="txtsao" value="2" type="radio"><label for="star2"></label>
+                                                        <input id="star1" name="rating" class="txtsao" value="1" type="radio"><label for="star1"></label>
+
+                                                    </div>
+                                                </div>
+                                            }
+                                            else
+                                            {
+                                                <input class="input" type="text" placeholder="Your Name">
+                                                <input class="input" type="email" placeholder="Your Email">
+                                                <textarea class="input" placeholder="Your Review"></textarea>
+                                                <div class="input-rating">
+                                                    <span>Your Rating: </span>
+                                                    <div class="stars">
+
+                                                        <input id="star5" name="rating" value="5" type="radio"><label for="star5"></label>
+                                                        <input id="star4" name="rating" value="4" type="radio"><label for="star4"></label>
+                                                        <input id="star3" name="rating" value="3" type="radio"><label for="star3"></label>
+                                                        <input id="star2" name="rating" value="2" type="radio"><label for="star2"></label>
+                                                        <input id="star1" name="rating" value="1" type="radio"><label for="star1"></label>
+                                                    </div>
+                                                </div>
+                                            }
+
+                                            <button id="btnsave" class="btn">Save Comment</button>
+                                        </form>
+                                    </div>
+                                </div>
+                                <!-- /Review Form -->
+                            </div>
+                        </div>
+                        <!-- /tab3  -->
+                    </div>
+                    <!-- /product tab content  -->
+                </div>
+            </div>
+        </div>
+        <!-- /row -->
+    </div>
+    <!-- /container -->
+</div>
+<!-- /SECTION -->
+<div class="section">
+    <!-- container -->
+    <div class="container">
+        <!-- row -->
+        <div class="row">
+            <!-- section title -->
+            <div class="col-md-12">
+                <div class="section-title">
+                    <h3 class="title"><a href="/san-pham">Sản phẩm liên quan</a></h3>
+                </div>
+            </div>
+            <!-- /section title -->
+            <!-- Products tab & slick -->
+            <div class="col-md-12">
+                <div class="row">
+                    <div class="products-tabs">
+                        <!-- tab -->
+                        <div id="tab1" class="tab-pane active">
+                            <div class="products-slick" data-nav="#slick-nav-1">
+                                <!-- product -->
+                                @foreach (var item in relatedProducts)
+                                {
+                                    var url = "/chi-tiet/" + item.MetaTitle + "-" + item.ID;
+                                    <div class="product">
+                                        <div class="product-img">
+                                            <a href="@url"><img src="@item.Image"  class="w-100" alt=""></a>
+                                        </div>
+                                        <div class="product-body" style="height:200px">
+                                            <h3 class="product-name"><a href="#">@item.Name</a></h3>
+                                            <h4 class="product-price">@(item.Price.HasValue? item.Price.Value.ToString("N0"):"Liên hệ")></h4>
+                                            <h4>@(item.Status? "Còn hàng":"Hết hàng")</h4>
+                                            <div class="product-rating">
+                                                @for (int i = 0; i < (new RatingDao().SumStar(item.ID)); i++)
+                                                {
+                                                    <i class="fa fa-star"></i>
+                                                }
+                                            </div>
+                                        </div>
+                                        <div class="add-to-cart">
+                                            <h4 class="add-to-cart-btn"><i class="fa fa-shopping-cart"></i><a href="/them-gio-hang?productId=@item.ID&quantity=1">Thêm vào giỏ hàng</a></h4>
+                                        </div>
+                                    </div>
+                                }
+                                <!-- /product -->
+                            </div>
+                            <div id="slick-nav-1" class="products-slick-nav"></div>
+                        </div>
+                        <!-- /tab -->
+                    </div>
+                </div>
+            </div>
+            <!-- Products tab & slick -->
+        </div>
+        <!-- /row -->
+    </div>
+    <!-- /container -->
+</div>

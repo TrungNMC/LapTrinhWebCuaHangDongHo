@@ -1,0 +1,63 @@
+﻿@model List<Model.ViewModel.OrderViewModel>
+@{
+    ViewBag.Title = "Quản lí đơn hàng";
+    Layout = "~/Areas/Admin/Views/Shared/_Layouts.cshtml";
+    var listOrders = (List<Model.ViewModel.OrderViewModel>)ViewBag.listOrder;
+}
+
+@section jsFooter{
+    <script src="/Assets/admin/js/controller/cartController.js"></script>
+}
+<div class="row">
+    <div class="col-lg-12">
+        <div class="card shadow mb-4">
+            <div class="card-body">
+                @using (Html.BeginForm("Index", "Order", FormMethod.Get))
+                {
+                    <div class="row form-group">
+                        <div class="col-lg-12">
+                            <div class="col-md-12">
+                                <input type="text" value="@ViewBag.SearchString" name="searchString" />
+                                <button type="submit" class="btn btn-success">Tìm kiếm</button>
+                            </div>
+                        </div>
+                    </div>
+                }
+                <div class="table-responsive">
+                    <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                        <thead>
+                            <tr>
+                                <th>Đơn hàng</th>
+                                <th>Tên sản phẩm</th>
+                                <th>Ngày đặt hàng</th>
+                                <th>Tên khách hàng</th>
+                                <th>Địa chỉ nhận hàng</th>
+                                <th>Email</th>
+                                <th>Số lượng</th>
+                                <th>Tổng tiền</th>
+                                <th>Trạng thái</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in listOrders)
+                            {
+                                <tr id="row_@item.OrderId">
+                                    <td>@item.OrderId</td>
+                                    <td>@item.ProductName </td>
+                                    <td>@item.CreatedDate</td>
+                                    <td>@item.ShipName</td>
+                                    <td>@item.ShipAddress</td>
+                                    <td>@item.ShipEmail</td>
+                                    <td>@item.Quantity</td>
+                                    <td>@item.Price.GetValueOrDefault(0).ToString("N0")</td>
+                                    <td><a href="#" class="btn-active" data-id="@item.OrderId">@(item.Status? "Hoàn thành":"Đang xử lí")</a></td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+

@@ -1,0 +1,255 @@
+﻿@model Model.EF.Content
+
+@{
+    ViewBag.Title = "Create";
+    Layout = "~/Areas/Admin/Views/Shared/_Layouts.cshtml";
+}
+<link href="~/Content/summernote/summernote.css" rel="stylesheet" />
+<style type="text/css">
+    .note-toolbar panel-heading {
+        color: #808080;
+    }
+
+    button.note-btn i {
+        color: #808080;
+    }
+
+    button.note-btn span {
+        color: #808080;
+    }
+
+    .note-editor.note-frame .note-btn {
+        border: 1px solid #4e0c0c !important;
+        background: #ffffff !important;
+    }
+</style>
+
+@section jsFooter{
+
+    <script src="~/Scripts/summernote/summernote.min.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            load();
+            $(".note-icon-trash").trigger("click");
+        });
+        function load() {
+            var myElement = $(".chitiet");
+            myElement.summernote({
+                placeholder: 'Enter content....',
+                tabsize: 2,
+                height: 200,
+                minHeight: 100,
+                maxHeight: 300,
+                focus: true,
+                callbacks: {
+                    onImageUpload: function (files) {
+                        for (var i = 0; i < files.length; i++) {
+
+                            uploadImage(files[i]);
+                        }
+                    }
+                },
+                toolbar: [
+                    ['style', ['bold', 'italic', 'underline', 'clear']],
+                    ['font', ['strikethrough', 'superscript', 'subscript']],
+                    ['fontsize', ['fontsize']],
+                    ['color', ['color']],
+                    ['para', ['ul', 'ol', 'paragraph']],
+                    ['height', ['height']],
+                    ['table', ['table']],
+                    ['insert', ['link', 'picture', 'video']],
+                    ['view', ['fullscreen', 'codeview', 'help']],
+                ],
+                disableResizeEditor: true,
+                height: 200,
+                minHeight: null, // set minimum height of editor
+                maxHeight: null,
+                codemirror: {
+                    theme: 'monokai'
+                }
+                // set editor height
+                // set maximum height of editor
+                // set focus to editable area after initializing summernote
+            });
+        }
+
+        function uploadImage(file) {
+            var formData = new FormData();
+            formData.append("uploadedFiles", file);
+            $.ajax({
+                data: formData,
+                type: "POST",
+                url: '/Admin/Product/UploadFile',
+                cache: false,
+                contentType: false,
+
+                processData: false,
+                success: function (FileUrl) {
+
+                    var imgNode = document.createElement('img');
+                    imgNode.src = FileUrl;
+                    $('.chitiet').summernote('insertNode', imgNode);
+                },
+                error: function (data) {
+                    alert(data.responseText);
+                }
+            });
+        }
+
+    </script>
+
+    <script>
+        @*import { Alert } from "../../../../Assets/admin/vendor/bootstrap/js/bootstrap.bundle";*@
+        $(function () {
+            //đăng kí sự kiện click của btnUpload
+            $('#btnUpload').click(function () {
+                $('#Upload').trigger('click');
+            });
+            //Bắt sự kiện change data của fileUpload
+            $('#Upload').change(function () {
+                //kiểm tra trình duyệt có hỗ trợ formdata
+                if (window.FormData !== undefined) {
+                    //Lấy dữ liệu trên fileUpload
+                    var fileUpload = $('#Upload').get(0);
+                    var files = fileUpload.files;
+                    //tao doi tuong formdata
+                    var formData = new FormData();
+                    //dua du lieu vao form
+                    formData.append('file', files[0]);
+                    $.ajax({
+
+                        type: 'POST',
+                        url: '/Admin/About/ProcessUpload',
+                        contentType: false,
+                        processData: false,
+                        data: formData,
+                        success: function (urlImage) {
+                            $('#pictureUpload').attr('src', urlImage);
+                            $('#Image').val(urlImage);
+                        },
+                        error: function (err) {
+                            @*Alert('Có lỗi khi upload:' + err.statusText);*@
+                        }
+                    })
+                }
+            });
+        });
+    </script>
+}
+
+<div class="container">
+    @using (Html.BeginForm())
+    {
+        @Html.AntiForgeryToken()
+
+        <div class="form-horizontal">
+            <h4>Content</h4>
+            <hr />
+            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+            <div class="row">
+                <div class="col-lg">
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.Name, htmlAttributes: new { @class = "control-label col-md-2" })
+                        <div class="col-md-10">
+                            @Html.EditorFor(model => model.Name, new { htmlAttributes = new { @class = "form-control" } })
+                            @Html.ValidationMessageFor(model => model.Name, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+
+                </div>
+                <div class="col">
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.MetaTitle, htmlAttributes: new { @class = "control-label col-md-2" })
+                        <div class="col-md-10">
+                            @Html.EditorFor(model => model.MetaTitle, new { htmlAttributes = new { @class = "form-control" } })
+                            @Html.ValidationMessageFor(model => model.MetaTitle, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.CategoryID, htmlAttributes: new { @class = "control-label col-md-2" })
+                        <div class="col-md-10">
+                            @Html.DropDownListFor(model => model.CategoryID, null, new { @class = "form-control" })
+                            @Html.ValidationMessageFor(model => model.CategoryID, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="row">
+
+                <div class="col">
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.Tags, htmlAttributes: new { @class = "control-label col-md-2" })
+                        <div class="col-md-10">
+                            @Html.EditorFor(model => model.Tags, new { htmlAttributes = new { @class = "form-control" } })
+                            @Html.ValidationMessageFor(model => model.Tags, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.Image, htmlAttributes: new { @class = "control-label col-md-2" })
+
+                <div class="form-inline">
+                    @Html.EditorFor(model => model.Image, new { htmlAttributes = new { @class = "form-control" } })
+                    <input type="file" id="Upload" hidden />
+                    <input type="button" id="btnUpload" value="..." class="btn-success" />
+                    <hr />
+                </div>
+                <img id="pictureUpload" width="250" />
+
+                @Html.ValidationMessageFor(model => model.Image, "", new { @class = "text-danger" })
+            </div>
+
+
+
+
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.Description, htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.TextAreaFor(model => model.Description, new { @class = "chitiet", htmlAttributes = new { @class = "form-control chitiet" } })
+                    @Html.ValidationMessageFor(model => model.Description, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+
+
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.Detail, htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.TextAreaFor(model => model.Detail, new { @class = "chitiet", htmlAttributes = new { @class = "form-control chitiet" } })
+                    @Html.ValidationMessageFor(model => model.Detail, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.Status, htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    <div class="checkbox">
+                        @Html.CheckBoxFor(model => model.Status)
+                        @Html.ValidationMessageFor(model => model.Status, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+            </div>
+
+
+
+
+            <div class="form-group">
+                <div class="col-md-offset-2 col-md-10">
+                    <input type="submit"  value="Tạo mới" class="btn btn-success" />
+                </div>
+            </div>
+        </div>
+    }
+</div>
+
